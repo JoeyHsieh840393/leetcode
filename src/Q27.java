@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class RemoveElement {
+public class Q27 {
     public static void main(String[] args) {
         int[] nums = new int[] { 3, 2, 2, 3 };
         System.out.println(solution(nums, 3));
