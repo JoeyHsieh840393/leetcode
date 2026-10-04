@@ -5,38 +5,57 @@ import java.util.Map;
 
 public class Q30 {
     public static List<Integer> findSubstring(String s, String[] words) {
-        final Map<String, Integer> freq = new HashMap<>();
-        int size = 0;
+        List<Integer> ans = new ArrayList<>();
 
-        for (String word : words) {
-            size += word.length();
-            freq.put(word, freq.getOrDefault(word, 0) + 1);
+        if (words.length == 0 || s.length() == 0) {
+            return ans;
         }
 
-        List<Integer> result = new ArrayList<>();
+        int wordSize = words[0].length();
+        int wordCount = words.length;
+        int n = s.length();
 
-        for (int i = 0; i <= s.length() - size; i++) {
-            String sub = s.substring(i, i + size);
-            if (find(sub, freq, words)) {
-                result.add(i);
+        Map<String, Integer> originalCount = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            originalCount.put(words[i], originalCount.getOrDefault(words[i], 0) + 1);
+        }
+
+        System.out.println(originalCount);
+
+        for (int offset = 0; offset < wordSize; offset++) {
+            Map<String, Integer> currentCount = new HashMap<>();
+            int start = offset;
+            int count = 0;
+            for (int end = offset; end + wordSize <= n; end += wordSize) {
+                String currWord = s.substring(end, end + wordSize);
+
+                System.out.print(currWord + " ");
+
+                if (originalCount.containsKey(currWord)) {
+                    currentCount.put(currWord, currentCount.getOrDefault(currWord, 0) + 1);
+                    count++;
+
+                    System.out.print(currentCount);
+
+                    while (currentCount.get(currWord) > originalCount.get(currWord)) {
+                        String startWord = s.substring(start, start + wordSize);
+                        currentCount.put(startWord, currentCount.get(startWord) - 1);
+                        start += wordSize;
+                        count--;
+                    }
+
+                    if (count == wordCount) {
+                        ans.add(start);
+                    }
+                } else {
+                    count = 0;
+                    start = end + wordSize;
+                    currentCount.clear();
+                }
             }
+            System.out.println();
         }
-        return result;
-    }
-
-    private static boolean find(String sub, Map<String, Integer> freq, String[] words) {
-        final Map<String, Integer> cacul = new HashMap<>();
-
-        for (String word : words) {
-            int size = word.length();
-            for (int j = 0; j <= sub.length() - size; j += size) {
-                String str = sub.substring(j, j + size);
-                cacul.put(str, cacul.getOrDefault(str, 0) + 1);
-            }
-        }
-        System.out.println(freq);
-        System.out.println(cacul);
-        return freq.equals(cacul);
+        return ans;
     }
 
     public static void main(String[] args) {
@@ -48,12 +67,12 @@ public class Q30 {
         words = new String[] { "word", "good", "best", "word" };
         System.out.println(findSubstring(s, words));
 
-        s = "wordgoodgoodgoodbestword";
-        words = new String[] { "word", "good", "best", "good" };
-        System.out.println(findSubstring(s, words));
+        //s = "wordgoodgoodgoodbestword";
+        //words = new String[] { "word", "good", "best", "good" };
+        //System.out.println(findSubstring(s, words));
 
-        s = "ababaab";
-        words = new String[] { "ab", "ba", "ba" };
-        System.out.println(findSubstring(s, words));
+        //s = "ababaab";
+        //words = new String[] { "ab", "ba", "ba" };
+        //System.out.println(findSubstring(s, words));
     }
 }
