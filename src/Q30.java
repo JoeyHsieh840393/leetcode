@@ -20,8 +20,6 @@ public class Q30 {
             originalCount.put(words[i], originalCount.getOrDefault(words[i], 0) + 1);
         }
 
-        System.out.println(originalCount);
-
         for (int offset = 0; offset < wordSize; offset++) {
             Map<String, Integer> currentCount = new HashMap<>();
             int start = offset;
@@ -29,13 +27,9 @@ public class Q30 {
             for (int end = offset; end + wordSize <= n; end += wordSize) {
                 String currWord = s.substring(end, end + wordSize);
 
-                System.out.print(currWord + " ");
-
                 if (originalCount.containsKey(currWord)) {
                     currentCount.put(currWord, currentCount.getOrDefault(currWord, 0) + 1);
                     count++;
-
-                    System.out.print(currentCount);
 
                     while (currentCount.get(currWord) > originalCount.get(currWord)) {
                         String startWord = s.substring(start, start + wordSize);
